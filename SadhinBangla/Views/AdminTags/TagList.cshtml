@@ -1,0 +1,33 @@
+﻿@model List<SadhinBangla.Models.Domain.Tag>
+@{
+}
+
+
+<div class="container py-5">
+    @if(Model != null && Model.Any())
+    {
+        <table class="table table-bordered">
+            <thead class="thead-dark text-uppercase">
+                <tr>
+                    <th>ID</th>
+                    <th>Name</th>
+                    <th>Display Name</th>
+                </tr>
+            </thead>
+            @foreach (var tag in Model)
+            {
+                <tr>
+                    <td>@tag.Id</td>
+                    <td>@tag.Name</td>
+                    <td>@tag.DisplayName</td>
+                </tr>
+            }
+
+        </table>
+    }
+    else
+    {
+        <p>Not Tag Yet.....</p>
+    }
+
+</div>
