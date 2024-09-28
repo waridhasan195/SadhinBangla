@@ -49,5 +49,62 @@ namespace SadhinBangla.Controllers
             return View(TotalTags);
         }
 
+
+        [HttpGet]
+        public IActionResult EditTag(Guid id)
+        {
+            //var tag = sadhinBanglaDbContext.tags.Find(id);
+            var tag = sadhinBanglaDbContext.tags.FirstOrDefault(t => t.Id == id);
+            if (tag != null)
+            {
+                var editTagRequest = new EditTagRequest
+                {
+                    Id = tag.Id,
+                    Name = tag.Name,
+                    DisplayName = tag.DisplayName
+                };
+                return View(editTagRequest);
+            }
+            else
+            {
+                return View(null);
+            }
+        }
+
+        [HttpPost]
+        public IActionResult EditTag(EditTagRequest editTagRequest)
+        {
+
+            var tag = new Tag
+            {
+                Id = editTagRequest.Id,
+                Name = editTagRequest.Name,
+                DisplayName = editTagRequest.DisplayName
+            };
+
+            var existingTag = sadhinBanglaDbContext.tags.Find(tag.Id);
+            if (existingTag != null)
+            {
+                existingTag.Name = tag.Name;
+                existingTag.DisplayName = tag.DisplayName;
+                sadhinBanglaDbContext.SaveChanges();
+                return RedirectToAction("EditTag", new { id = editTagRequest.Id }); 
+            }
+            return RedirectToAction("EditTag", new { id = editTagRequest.Id });
+        }
+
+        [HttpPost]
+        public IActionResult DeleteTag(EditTagRequest editTagRequest)
+        {
+            var tag = sadhinBanglaDbContext.tags.FirstOrDefault(t => t.Id == editTagRequest.Id);
+            if (tag != null)
+            {
+                sadhinBanglaDbContext.Remove(tag);
+                sadhinBanglaDbContext.SaveChanges();
+                return RedirectToAction("TagList");
+            }
+
+            return RedirectToAction("EditTag", new {id = editTagRequest.Id});
+        }
     }
 }

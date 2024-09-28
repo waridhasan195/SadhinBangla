@@ -12,6 +12,7 @@
                     <th>ID</th>
                     <th>Name</th>
                     <th>Display Name</th>
+                    <th>Actions</th>
                 </tr>
             </thead>
             @foreach (var tag in Model)
@@ -20,6 +21,10 @@
                     <td>@tag.Id</td>
                     <td>@tag.Name</td>
                     <td>@tag.DisplayName</td>
+                    <td>
+                        <a class="btn btn-primary" asp-controller="AdminTags" asp-route-id="@tag.Id" asp-action="EditTag">EDIT</a>  
+                    </td>
+                    
                 </tr>
             }
 

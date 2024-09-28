@@ -1,0 +1,34 @@
+﻿
+@model SadhinBangla.Models.ViewModels.EditTagRequest
+
+@{
+}
+<div class="bg-secondary bg-opacity-10 py-2">
+    <div class="container">
+        <h1>Edit Tag - Admin Functionality</h1>
+    </div>
+</div>
+
+<div class="container py-5">
+    <form method="post">
+        <div class="mb-2">
+            <label class="form-label">ID</label>
+            <input class="form-control" type="text" id="id" asp-for="Id" readonly/>
+        </div>
+        <div class="mb-2">
+            <label class="form-label">Name</label>
+            <input class="form-control" type="text" id="name" asp-for="Name" />
+        </div>
+        <div class="mb-2">
+            <label class="form-label">Display Name</label>
+            <input class="form-control" type="text" id="displayName" asp-for="DisplayName" />
+        </div>
+        <div class="mb-2">
+            <div class="d-flex">
+                <button type="submit" class="btn btn-primary m-2">Update</button>
+                <button asp-area="" asp-controller="AdminTags" asp-action="DeleteTag" type="submit" class="btn btn-danger m-2">DELETE</button>
+            </div>
+          
+        </div>
+    </form>
+</div>
