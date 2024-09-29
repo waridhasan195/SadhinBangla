@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using SadhinBangla.Data;
 using SadhinBangla.Models.Domain;
 using SadhinBangla.Models.ViewModels;
@@ -24,17 +25,17 @@ namespace SadhinBangla.Controllers
 
         [HttpPost]
         [ActionName("Add")]
-        public IActionResult Add(AddTagRequest addTagRequest)
+        public async Task<IActionResult> Add(AddTagRequest addTagRequest)
         {
-
+            //Mapping AddRagRequest to Tag domain Model
             var tag = new Tag
             {
                 Name = addTagRequest.Name,
                 DisplayName = addTagRequest.DisplayName
             };
 
-            sadhinBanglaDbContext.Add(tag);
-            sadhinBanglaDbContext.SaveChanges();
+            await sadhinBanglaDbContext.AddAsync(tag);
+            await sadhinBanglaDbContext.SaveChangesAsync();
             //var name = addTagRequest.Name;
             //var displayname = addTagRequest.DisplayName;
             return RedirectToAction("TagList");
@@ -43,18 +44,18 @@ namespace SadhinBangla.Controllers
         //https://localhost:7196/AdminTags/TagList
         [HttpGet]
         [ActionName("TagList")]
-        public IActionResult TagList()
+        public async Task<IActionResult> TagList()
         {
-            var TotalTags = sadhinBanglaDbContext.tags.ToList();
+            var TotalTags = await sadhinBanglaDbContext.tags.ToListAsync();
             return View(TotalTags);
         }
 
 
         [HttpGet]
-        public IActionResult EditTag(Guid id)
+        public async Task<IActionResult> EditTag(Guid id)
         {
             //var tag = sadhinBanglaDbContext.tags.Find(id);
-            var tag = sadhinBanglaDbContext.tags.FirstOrDefault(t => t.Id == id);
+            var tag = await sadhinBanglaDbContext.tags.FirstOrDefaultAsync(t => t.Id == id);
             if (tag != null)
             {
                 var editTagRequest = new EditTagRequest
@@ -72,7 +73,7 @@ namespace SadhinBangla.Controllers
         }
 
         [HttpPost]
-        public IActionResult EditTag(EditTagRequest editTagRequest)
+        public async Task<IActionResult> EditTag(EditTagRequest editTagRequest)
         {
 
             var tag = new Tag
@@ -82,25 +83,25 @@ namespace SadhinBangla.Controllers
                 DisplayName = editTagRequest.DisplayName
             };
 
-            var existingTag = sadhinBanglaDbContext.tags.Find(tag.Id);
+            var existingTag = await sadhinBanglaDbContext.tags.FindAsync(tag.Id);
             if (existingTag != null)
             {
                 existingTag.Name = tag.Name;
                 existingTag.DisplayName = tag.DisplayName;
-                sadhinBanglaDbContext.SaveChanges();
+                await sadhinBanglaDbContext.SaveChangesAsync();
                 return RedirectToAction("EditTag", new { id = editTagRequest.Id }); 
             }
             return RedirectToAction("EditTag", new { id = editTagRequest.Id });
         }
 
         [HttpPost]
-        public IActionResult DeleteTag(EditTagRequest editTagRequest)
+        public async Task<IActionResult> DeleteTag(EditTagRequest editTagRequest)
         {
-            var tag = sadhinBanglaDbContext.tags.FirstOrDefault(t => t.Id == editTagRequest.Id);
+            var tag = await sadhinBanglaDbContext.tags.FirstOrDefaultAsync(t => t.Id == editTagRequest.Id);
             if (tag != null)
             {
                 sadhinBanglaDbContext.Remove(tag);
-                sadhinBanglaDbContext.SaveChanges();
+                await sadhinBanglaDbContext.SaveChangesAsync();
                 return RedirectToAction("TagList");
             }
 
