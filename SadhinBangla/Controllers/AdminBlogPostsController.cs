@@ -64,5 +64,12 @@ namespace SadhinBangla.Controllers
             await blogPostRepository.AddAsync(blogpost);
             return RedirectToAction("Add");
         }
+
+
+        public async Task<IActionResult> List()
+        {
+            var blogPost = await blogPostRepository.GetAllAsync();
+            return View(blogPost);
+        }
     }
 }

@@ -1,4 +1,5 @@
-﻿using SadhinBangla.Data;
+﻿using Microsoft.EntityFrameworkCore;
+using SadhinBangla.Data;
 using SadhinBangla.Models.Domain;
 
 namespace SadhinBangla.Rapositories
@@ -24,9 +25,9 @@ namespace SadhinBangla.Rapositories
             throw new NotImplementedException();
         }
 
-        public Task<IEnumerable<BlogPost>> GetAllAsync()
+        public async Task<IEnumerable<BlogPost>> GetAllAsync()
         {
-            throw new NotImplementedException();
+            return await sadhinBanglaDbContext.BlogPosts.Include(x => x.Tags).ToListAsync();
         }
 
         public Task<BlogPost?> GetAsync(Guid id)
