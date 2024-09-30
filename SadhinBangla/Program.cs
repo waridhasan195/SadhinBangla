@@ -1,5 +1,6 @@
 using Microsoft.EntityFrameworkCore;
 using SadhinBangla.Data;
+using SadhinBangla.Rapositories;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -8,6 +9,9 @@ builder.Services.AddControllersWithViews();
 
 builder.Services.AddDbContext<SadhinBanglaDbContext>(options => 
                 options.UseSqlServer(builder.Configuration.GetConnectionString("SadhinBanglaDbConnectionString")));
+
+builder.Services.AddScoped<ITagRapository, TagRapository>();
+
 
 var app = builder.Build();
 

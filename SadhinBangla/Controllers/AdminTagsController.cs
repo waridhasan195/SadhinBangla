@@ -1,18 +1,17 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
-using SadhinBangla.Data;
 using SadhinBangla.Models.Domain;
 using SadhinBangla.Models.ViewModels;
+using SadhinBangla.Rapositories;
 
 namespace SadhinBangla.Controllers
 {
     public class AdminTagsController : Controller
     {
-        private readonly SadhinBanglaDbContext sadhinBanglaDbContext;
+        private readonly ITagRapository tagRapository;
 
-        public AdminTagsController(SadhinBanglaDbContext sadhinBanglaDbContext)
+        public AdminTagsController(ITagRapository tagRapository)
         {
-            this.sadhinBanglaDbContext = sadhinBanglaDbContext;
+            this.tagRapository = tagRapository;
         }
 
 
@@ -33,9 +32,15 @@ namespace SadhinBangla.Controllers
                 Name = addTagRequest.Name,
                 DisplayName = addTagRequest.DisplayName
             };
-
-            await sadhinBanglaDbContext.AddAsync(tag);
-            await sadhinBanglaDbContext.SaveChangesAsync();
+            var addTag = await tagRapository.AddAsync(tag);
+            if (addTag != null)
+            {
+                //Add Notification
+            }
+            else
+            {
+                //Add Notification
+            }
             //var name = addTagRequest.Name;
             //var displayname = addTagRequest.DisplayName;
             return RedirectToAction("TagList");
@@ -46,7 +51,7 @@ namespace SadhinBangla.Controllers
         [ActionName("TagList")]
         public async Task<IActionResult> TagList()
         {
-            var TotalTags = await sadhinBanglaDbContext.tags.ToListAsync();
+            var TotalTags = await tagRapository.GetAllAsync();
             return View(TotalTags);
         }
 
@@ -55,7 +60,7 @@ namespace SadhinBangla.Controllers
         public async Task<IActionResult> EditTag(Guid id)
         {
             //var tag = sadhinBanglaDbContext.tags.Find(id);
-            var tag = await sadhinBanglaDbContext.tags.FirstOrDefaultAsync(t => t.Id == id);
+            var tag = await tagRapository.GetAsync(id);
             if (tag != null)
             {
                 var editTagRequest = new EditTagRequest
@@ -83,29 +88,30 @@ namespace SadhinBangla.Controllers
                 DisplayName = editTagRequest.DisplayName
             };
 
-            var existingTag = await sadhinBanglaDbContext.tags.FindAsync(tag.Id);
-            if (existingTag != null)
+            var updateTag = await tagRapository.UpdateAsync(tag);
+            if (updateTag != null)
             {
-                existingTag.Name = tag.Name;
-                existingTag.DisplayName = tag.DisplayName;
-                await sadhinBanglaDbContext.SaveChangesAsync();
-                return RedirectToAction("EditTag", new { id = editTagRequest.Id }); 
+                //Update Success Notification
             }
+            else
+            {
+                //Update Error Notification
+            }
+
             return RedirectToAction("EditTag", new { id = editTagRequest.Id });
         }
 
         [HttpPost]
         public async Task<IActionResult> DeleteTag(EditTagRequest editTagRequest)
         {
-            var tag = await sadhinBanglaDbContext.tags.FirstOrDefaultAsync(t => t.Id == editTagRequest.Id);
-            if (tag != null)
+            var deletedTag = await tagRapository.DeleteAsync(editTagRequest.Id);
+            if (deletedTag != null)
             {
-                sadhinBanglaDbContext.Remove(tag);
-                await sadhinBanglaDbContext.SaveChangesAsync();
+                //Delete Success Notification
                 return RedirectToAction("TagList");
             }
-
-            return RedirectToAction("EditTag", new {id = editTagRequest.Id});
+            //Delete Error Notification
+            return RedirectToAction("EditTag", new { id = editTagRequest.Id });
         }
     }
 }
