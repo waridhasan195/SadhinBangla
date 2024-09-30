@@ -11,6 +11,7 @@ builder.Services.AddDbContext<SadhinBanglaDbContext>(options =>
                 options.UseSqlServer(builder.Configuration.GetConnectionString("SadhinBanglaDbConnectionString")));
 
 builder.Services.AddScoped<ITagRapository, TagRapository>();
+builder.Services.AddScoped<IBlogPostRepository, BlogPostRepository>();
 
 
 var app = builder.Build();
