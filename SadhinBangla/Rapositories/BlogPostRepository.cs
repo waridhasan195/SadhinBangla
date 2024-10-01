@@ -1,6 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using SadhinBangla.Data;
 using SadhinBangla.Models.Domain;
+using Microsoft.AspNetCore.Mvc.Rendering;
 
 namespace SadhinBangla.Rapositories
 {
@@ -20,9 +21,16 @@ namespace SadhinBangla.Rapositories
             return blogPost;
         }
 
-        public Task<BlogPost?> DeleteAsync(Guid id)
+        public async Task<BlogPost?> DeleteAsync(Guid id)
         {
-            throw new NotImplementedException();
+            var existingBlog = await sadhinBanglaDbContext.BlogPosts.FindAsync(id);
+            if (existingBlog != null)
+            {
+                sadhinBanglaDbContext.BlogPosts.Remove(existingBlog);
+                await sadhinBanglaDbContext.SaveChangesAsync();
+                return existingBlog;
+            }
+            return null;      
         }
 
         public async Task<IEnumerable<BlogPost>> GetAllAsync()
@@ -30,14 +38,34 @@ namespace SadhinBangla.Rapositories
             return await sadhinBanglaDbContext.BlogPosts.Include(x => x.Tags).ToListAsync();
         }
 
-        public Task<BlogPost?> GetAsync(Guid id)
+        public async Task<BlogPost?> GetAsync(Guid id)
         {
-            throw new NotImplementedException();
+            return await sadhinBanglaDbContext.BlogPosts.Include(x => x.Tags).FirstOrDefaultAsync(x => x.Id == id);
+
         }
 
-        public Task<BlogPost?> UpdateAsync(BlogPost blogPost)
+        public async Task<BlogPost?> UpdateAsync(BlogPost blogPost)
         {
-            throw new NotImplementedException();
+            var existingBlog = await sadhinBanglaDbContext.BlogPosts.Include(x => x.Tags).FirstOrDefaultAsync(x => x.Id == blogPost.Id);
+            if (existingBlog != null)
+            {
+                existingBlog.Id = blogPost.Id;
+                existingBlog.Heading = blogPost.Heading;
+                existingBlog.PageTitle = blogPost.PageTitle;
+                existingBlog.Content = blogPost.Content;
+                existingBlog.ShortDescription = blogPost.ShortDescription;
+                existingBlog.Author = blogPost.Author;
+                existingBlog.FeaturedImageUrl = blogPost.FeaturedImageUrl;
+                existingBlog.UrlHandle = blogPost.UrlHandle;
+                existingBlog.Visible = blogPost.Visible;
+                existingBlog.PublishDaate = blogPost.PublishDaate;
+                existingBlog.Tags = blogPost.Tags;
+
+                await sadhinBanglaDbContext.SaveChangesAsync();
+                return existingBlog;
+            }
+
+            return null;
         }
     }
 }
