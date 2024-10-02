@@ -12,6 +12,7 @@ builder.Services.AddDbContext<SadhinBanglaDbContext>(options =>
 
 builder.Services.AddScoped<ITagRapository, TagRapository>();
 builder.Services.AddScoped<IBlogPostRepository, BlogPostRepository>();
+builder.Services.AddScoped<IImageRapository, CloudinaryImageRepository>();
 
 
 var app = builder.Build();
