@@ -12,6 +12,8 @@ namespace SadhinBangla.Rapositories
 
         Task<BlogPost?> UpdateAsync(BlogPost blogPost);
 
+        Task<BlogPost?> GetUrlHandleAsync(string urlHandle);
+
         Task<BlogPost?> DeleteAsync(Guid id);
     }
 }

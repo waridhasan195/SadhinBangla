@@ -1,0 +1,19 @@
+﻿@model List<SadhinBangla.Models.Domain.BlogPost>
+
+@{
+}
+
+<div class="container">
+    <div>
+        @if(Model != null && Model.Any())
+        {
+            <div>
+                @foreach(var content in Model)
+                {
+                    <p>content.Heading</p>
+                }
+            </div>
+        }    
+    </div>
+</div>
+

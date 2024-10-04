@@ -67,5 +67,10 @@ namespace SadhinBangla.Rapositories
 
             return null;
         }
+
+        public async Task<BlogPost?> GetUrlHandleAsync(string urlHandle)
+        {
+            return await sadhinBanglaDbContext.BlogPosts.Include(x => x.Tags).FirstOrDefaultAsync(x => x.UrlHandle == urlHandle);
+        }
     }
 }
