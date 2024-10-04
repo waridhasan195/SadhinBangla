@@ -1,8 +1,66 @@
-﻿@{
+﻿
+@model  List<SadhinBangla.Models.Domain.BlogPost>
+
+@{
     ViewData["Title"] = "Home Page";
 }
 
-<div class="text-center">
-    <h1 class="display-4">Welcome</h1>
-    <p>Learn about <a href="https://docs.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
+
+
+<div class="container col-xxl-8 px-4 py-5">
+    <div class="row align-content-center g-5 py-5">
+        <div class="col-12 col-lg-6">
+            <h1 class="display-5 fw-bold lh-1 mb-3 text-danger">
+                SADHIN Bangla
+            </h1>
+            <p class="lead">
+                A tech blog focuses on topics related to technology, such as software, hardware, coding, app development, and more. It can target both professionals and enthusiasts, providing valuable insights and updates on the latest trends and innovations in the tech world
+            </p>
+            <p class="lead">
+                Benefits of a Tech Blog
+                Builds Authority: Establish yourself as an expert in your field.
+                Engages Community: Connect with other tech enthusiasts and professionals.
+                Monetization Opportunities: Earn through ads, affiliate marketing, and sponsored posts1.
+                Starting a tech blog requires dedication and consistency, but it can be a highly rewarding way to share your passion for technology with the world.
+
+                Would you like more detailed advice on any specific aspect of starting your tech blog?
+            </p>
+        </div>
+        <div class="col-12 col-lg-6">
+            <img src="https://images.pexels.com/photos/33779/hand-microphone-mic-hold.jpg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1" alt="SADHIN Bangla Blog" class="d-block mx-lg-auto img-fluid" width="600" />
+        </div>
+    </div>
+</div>
+
+
+
+<div class="container">
+    <div class="row justify-content-center">
+        <div class="col-6">
+            @if (Model != null && Model.Any())
+            {
+                foreach (var blogPost in Model)
+                {
+                    <div class="mb-5 bg-light box-shadow p-2">
+                        <img src="@blogPost.FeaturedImageUrl" alt="@blogPost.Heading" class="mb-2 d-block img-fluid"/>    
+                    
+                        <h2 class="mb-4">@blogPost.Heading</h2>
+                        <p class="mb-4">Author: @blogPost.Author
+                        <br />
+                        Published Date: @blogPost.PublishDaate.ToShortDateString()
+                        </p>
+                        <p class="mb-4">
+                            @foreach(var tag in blogPost.Tags)
+                            {
+                                <span class="badge bg-info me-1">@tag.Name</span>
+                            }
+                        </p>
+                        <p class="mb-4">@blogPost.ShortDescription</p>
+                        <a class="btn btn-dark" href="#">Read More</a>
+                    </div>
+                }
+               
+            }
+        </div>
+    </div>
 </div>

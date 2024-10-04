@@ -97,9 +97,7 @@ namespace SadhinBangla.Controllers
                 }; 
                 return View(model);
             }
-
-            return View(null);
-            
+            return View(null);   
         }
 
         [HttpPost]
