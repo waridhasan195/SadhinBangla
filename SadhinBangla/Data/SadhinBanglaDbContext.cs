@@ -5,7 +5,7 @@ namespace SadhinBangla.Data
 {
     public class SadhinBanglaDbContext : DbContext
     {
-        public SadhinBanglaDbContext(DbContextOptions options) : base(options)
+        public SadhinBanglaDbContext(DbContextOptions<SadhinBanglaDbContext> options) : base(options)
         {
         }
 
