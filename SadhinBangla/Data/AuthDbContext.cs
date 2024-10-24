@@ -61,11 +61,11 @@ namespace SadhinBangla.Data
             };
             superAdminUser.PasswordHash = new PasswordHasher<IdentityUser>()
                 .HashPassword(superAdminUser, "superadmin123");
+
             builder.Entity<IdentityUser>().HasData(superAdminUser);
 
 
             // Add All roles to SuperAdminUser
-
             var superAdminRoles = new List<IdentityUserRole<string>>
             {
                 new IdentityUserRole<string>

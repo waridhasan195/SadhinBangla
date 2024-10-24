@@ -13,7 +13,7 @@ builder.Services.AddDbContext<SadhinBanglaDbContext>(options =>
 
 builder.Services.AddDbContext<AuthDbContext>(options =>
                 options.UseSqlServer(builder.Configuration.GetConnectionString("SadhinBanglaAuthDbConnectionString")));
-
+                                                                                                                                                                                                                                                                                                                                                                        
 
 builder.Services.AddIdentity<IdentityUser, IdentityRole>()
     .AddEntityFrameworkStores<AuthDbContext>();

@@ -3,10 +3,12 @@ using SadhinBangla.Models.ViewModels;
 using SadhinBangla.Rapositories;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using SadhinBangla.Models.Domain;
+using Microsoft.AspNetCore.Authorization;
 
 
 namespace SadhinBangla.Controllers
 {
+    [Authorize(Roles = "Admin")]
     public class AdminBlogPostsController : Controller
     {
         private readonly ITagRapository tagRapository;

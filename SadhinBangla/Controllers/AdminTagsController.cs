@@ -1,10 +1,12 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using SadhinBangla.Models.Domain;
 using SadhinBangla.Models.ViewModels;
 using SadhinBangla.Rapositories;
 
 namespace SadhinBangla.Controllers
 {
+    [Authorize(Roles = "Admin")]
     public class AdminTagsController : Controller
     {
         private readonly ITagRapository tagRapository;
@@ -16,11 +18,13 @@ namespace SadhinBangla.Controllers
 
 
         //https://localhost:7196/AdminTags/Add
+        
         [HttpGet]
         public IActionResult Add()
         {
             return View();
         }
+
 
         [HttpPost]
         [ActionName("Add")]
