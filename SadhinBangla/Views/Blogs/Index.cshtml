@@ -1,4 +1,8 @@
-﻿@model SadhinBangla.Models.ViewModels.BlogDetailsViewModel
+﻿@using Microsoft.AspNetCore.Identity
+@inject SignInManager<IdentityUser> signInManager
+@inject UserManager<IdentityUser> usemanager
+
+@model SadhinBangla.Models.ViewModels.BlogDetailsViewModel
 
 @{
     ViewData["Title"] = Model.PageTitle;
@@ -16,7 +20,11 @@
                 </div>
 
                 <div class="mb-3">
-                    <span>@Model.TotalLikes</span> Likes
+                    @if (signInManager.IsSignedIn(User))
+                    {
+                        <a id="btnLike" style="cursor:pointer"><i class="bi bi-hand-thumbs-up-fill"></i></a>
+                    }
+                    <span>@Model.TotalLikes</span> Like
                 </div>
 
 
@@ -41,3 +49,27 @@
     </div>
 </div>
 
+@section Scripts{
+    <script>
+        const btnLikeElement = document.getElementById('btnLike');
+
+        async function addLikeForBlog() {
+            fetch('/api/BlogPostLike/add', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Accept': '*/*'
+                },
+                body: JSON.stringify({
+                    blogPostId: '@Model.Id',
+                    userId: '@usemanager.GetUserId(User)'
+                })
+
+            }).then(console.log('Request Finished'));
+        }
+
+
+        btnLikeElement.addEventListener('click', addLikeForBlog) ;
+
+    </script>
+}

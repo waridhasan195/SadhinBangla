@@ -1,6 +1,7 @@
 ﻿
 using Microsoft.EntityFrameworkCore;
 using SadhinBangla.Data;
+using SadhinBangla.Models.Domain;
 
 namespace SadhinBangla.Rapositories
 {
@@ -12,6 +13,14 @@ namespace SadhinBangla.Rapositories
         {
             this.sadhinBanglaDbContext = sadhinBanglaDbContext;
         }
+
+        public async Task<BlogPostLike> AddLikeForBlog(BlogPostLike blogPostLike)
+        {
+            await sadhinBanglaDbContext.BlogPostLikes.AddAsync(blogPostLike);
+            await sadhinBanglaDbContext.SaveChangesAsync();
+            return blogPostLike;
+        }
+
         public async Task<int> GetTotalLikes(Guid blogPostId)
         {
             return await sadhinBanglaDbContext.BlogPostLikes.CountAsync(x => x.BlogPostId == blogPostId);
