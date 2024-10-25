@@ -21,6 +21,11 @@ namespace SadhinBangla.Rapositories
             return blogPostLike;
         }
 
+        public async Task<IEnumerable<BlogPostLike>> GetLikesForBlogForUser(Guid blogPostId)
+        {
+            return await sadhinBanglaDbContext.BlogPostLikes.Where(x => x.BlogPostId == blogPostId).ToListAsync();
+        }
+
         public async Task<int> GetTotalLikes(Guid blogPostId)
         {
             return await sadhinBanglaDbContext.BlogPostLikes.CountAsync(x => x.BlogPostId == blogPostId);

@@ -6,6 +6,10 @@ namespace SadhinBangla.Rapositories
     {
         Task<int> GetTotalLikes(Guid blogPostId);
 
+        Task<IEnumerable<BlogPostLike>> GetLikesForBlogForUser(Guid blogPostId);
+
         Task<BlogPostLike> AddLikeForBlog(BlogPostLike blogPostLike);
+
+
     }
 }

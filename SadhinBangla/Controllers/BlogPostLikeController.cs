@@ -29,7 +29,16 @@ namespace SadhinBangla.Controllers
 
             await blogPostLikeRepository.AddLikeForBlog(model);
             return Ok();
-             
+        }
+
+
+        [HttpGet]
+        [Route("{blogPostId:Guid}/totalLikes")]
+        public async Task<IActionResult> GetTotalLikesForBlog([FromRoute] Guid blogPostId)
+        {
+            var totalLikes = await blogPostLikeRepository.GetTotalLikes(blogPostId);
+            return Ok(totalLikes); 
         }
     }
+    
 }
