@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using SadhinBangla.Models.Domain;
 using SadhinBangla.Models.ViewModels;
 using SadhinBangla.Rapositories;
 
@@ -11,16 +12,19 @@ namespace SadhinBangla.Controllers
         private readonly IBlogPostLikeRepository blogPostLikeRepository;
         private readonly SignInManager<IdentityUser> signInManager;
         private readonly UserManager<IdentityUser> userManager;
+        private readonly IBlogPostCommentRepository blogPostCommentRepository;
 
         public BlogsController(IBlogPostRepository blogPostRepository, 
             IBlogPostLikeRepository blogPostLikeRepository,
             SignInManager<IdentityUser> signInManager,
-            UserManager<IdentityUser> userManager)
+            UserManager<IdentityUser> userManager,
+            IBlogPostCommentRepository blogPostCommentRepository)
         {
             this.blogPostRepository = blogPostRepository;
             this.blogPostLikeRepository = blogPostLikeRepository;
             this.signInManager = signInManager;
             this.userManager = userManager;
+            this.blogPostCommentRepository = blogPostCommentRepository;
         }
 
         [HttpGet]
@@ -48,6 +52,22 @@ namespace SadhinBangla.Controllers
                 }
 
                 var totalLikes = await blogPostLikeRepository.GetTotalLikes(blogPost.Id);
+
+                //Get comments for blog post
+                var blogCommentsDomainModel = await blogPostCommentRepository.GetCommentsByBlogIdAsync(blogPost.Id);
+
+                var blogCommentForView = new List<BlogComment>();
+               
+                foreach (var blogComment in blogCommentsDomainModel)
+                {
+                    blogCommentForView.Add(new BlogComment
+                    {
+                        Description = blogComment.Description,
+                        DateAdded = blogComment.DateAdded,
+                        UserName = (await userManager.FindByIdAsync(blogComment.UserId.ToString())).UserName
+                    });
+                }
+
                 blogDetailsViewModel = new BlogDetailsViewModel
                 {
                     Id = blogPost.Id,
@@ -62,10 +82,36 @@ namespace SadhinBangla.Controllers
                     Visible = blogPost.Visible,
                     Tags = blogPost.Tags,
                     TotalLikes = totalLikes,
-                    Liked = liked
+                    Liked = liked,
+                    Comments = blogCommentForView
                 };
             }
             return View(blogDetailsViewModel);
         }
+
+
+        [HttpPost]
+        public async Task<IActionResult> Index(BlogDetailsViewModel blogDetailsViewModel)
+        {
+            if (signInManager.IsSignedIn(User))
+            {
+                var domainModel = new BlogPostComment
+                {
+                    BlogPostId = blogDetailsViewModel.Id,
+                    Description = blogDetailsViewModel.CommentDescription,
+                    UserId = Guid.Parse(userManager.GetUserId(User)),
+                    DateAdded = DateTime.Now
+                };
+                await blogPostCommentRepository.AddAsync(domainModel);
+                return RedirectToAction("Index", "Blogs", new
+                {
+                    urlHandle = blogDetailsViewModel.UrlHandle
+                });
+            }
+            //return Forbid();
+            return View();  
+        }
+
+
     }
 }
