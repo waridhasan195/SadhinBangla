@@ -24,24 +24,29 @@ namespace SadhinBangla.Controllers
         [HttpPost]
         public async Task<IActionResult> Register(RegisterViewModel registerViewModel)
         {
-            var identityUser = new IdentityUser
-            {
-                UserName = registerViewModel.UserName,
-                Email = registerViewModel.Email,
-            };
 
-            var identityUserResult = await userManager.CreateAsync(identityUser, registerViewModel.Password);
-
-            if (identityUserResult.Succeeded)
+            if (ModelState.IsValid)
             {
-                //assign this user the "User" role
-                var roleIdentityResult = await userManager.AddToRoleAsync(identityUser, "User");
-                if (roleIdentityResult.Succeeded)
+                var identityUser = new IdentityUser
                 {
-                    //Success Notificatioon
-                    return RedirectToAction("Register");
+                    UserName = registerViewModel.UserName,
+                    Email = registerViewModel.Email,
+                };
+
+                var identityUserResult = await userManager.CreateAsync(identityUser, registerViewModel.Password);
+
+                if (identityUserResult.Succeeded)
+                {
+                    //assign this user the "User" role
+                    var roleIdentityResult = await userManager.AddToRoleAsync(identityUser, "User");
+                    if (roleIdentityResult.Succeeded)
+                    {
+                        //Success Notificatioon
+                        return RedirectToAction("Register");
+                    }
                 }
             }
+            
             //Error Return View Back
             return View();
 
@@ -50,6 +55,7 @@ namespace SadhinBangla.Controllers
         [HttpGet]
         public IActionResult Login(string ReturnUrl)
         {
+            
             var model = new LoginViewModel
             {
                 ReturnUrl = ReturnUrl
@@ -61,8 +67,12 @@ namespace SadhinBangla.Controllers
         [HttpPost]
         public async Task<IActionResult> Login(LoginViewModel loginViewModel)
         {
+            if (!ModelState.IsValid)
+            {
+                return View();
+            }
             var signinResult = await signInManager.PasswordSignInAsync(loginViewModel.UserName, loginViewModel.Password, false, false);
-            if(signinResult != null && signinResult.Succeeded)
+            if (signinResult != null && signinResult.Succeeded)
             {
                 if (!string.IsNullOrWhiteSpace(loginViewModel.ReturnUrl))
                 {

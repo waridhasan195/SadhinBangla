@@ -16,11 +16,13 @@
     <form method="post">
         <div class="mb-2">
             <label class="form-label">Name</label>
-            <input class="form-control" type="text" id="name" asp-for="Name" placeholder="Don't use any space and special characters." />
+            <input class="form-control" type="text" id="name" asp-for="Name" placeholder="Don't use any space and special characters." required/>
+            <span class="text-danger" asp-validation-for="Name"></span>
         </div>
         <div class="mb-2">
             <label class="form-label">Display Name</label>
-            <input class="form-control" type="text" id="displayName"asp-for="DisplayName" />
+            <input class="form-control" type="text" id="displayName" asp-for="DisplayName" required />
+            <span class="text-danger" asp-validation-for="DisplayName"></span>
         </div>
         <div class="mb-2">
             <button type="submit" class="btn btn-dark">Submit</button>

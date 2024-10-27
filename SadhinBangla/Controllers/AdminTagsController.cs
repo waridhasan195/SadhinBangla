@@ -30,6 +30,12 @@ namespace SadhinBangla.Controllers
         [ActionName("Add")]
         public async Task<IActionResult> Add(AddTagRequest addTagRequest)
         {
+            validateAddTagRequest(addTagRequest);
+            if(ModelState.IsValid == false)  
+            {
+                return View();
+            }
+
             //Mapping AddRagRequest to Tag domain Model
             var tag = new Tag
             {
@@ -117,5 +123,17 @@ namespace SadhinBangla.Controllers
             //Delete Error Notification
             return RedirectToAction("EditTag", new { id = editTagRequest.Id });
         }
+
+        private void validateAddTagRequest(AddTagRequest request)
+        {
+            if(request.Name is not null && request.DisplayName is not null)
+            {
+                if(request.Name == request.DisplayName)
+                {
+                    ModelState.AddModelError("DisplayName", "Name can't be the same as DisplayName");
+                }
+            }
+        }
+
     }
 }
