@@ -72,5 +72,20 @@ namespace SadhinBangla.Controllers
             return View(request);
             
         }
+
+        [HttpPost]
+        public async Task<IActionResult> Delete(Guid id)
+        {
+            var user = await userManager.FindByIdAsync(id.ToString());
+            if(user is not null)
+            {
+                var identityResult = await userManager.DeleteAsync(user);
+                if (identityResult is not null && identityResult.Succeeded)
+                {
+                    return RedirectToAction("List", "AdminUsers");
+                }
+            }
+            return View();
+        }
     }
 }
